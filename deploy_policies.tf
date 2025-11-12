@@ -23,9 +23,16 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
   }
 
   statement {
-    sid     = "CreateSecurityGroups"
-    effect  = "Allow"
-    actions = ["ec2:CreateSecurityGroup"]
+    sid    = "ManageSecurityGroups"
+    effect = "Allow"
+    actions = [
+      "ec2:CreateSecurityGroup",
+      "ec2:AuthorizeSecurityGroupIngress",
+      "ec2:AuthorizeSecurityGroupEgress",
+      "ec2:RevokeSecurityGroupIngress",
+      "ec2:RevokeSecurityGroupEgress",
+      "ec2:DescribeSecurityGroups"
+    ]
     resources = ["*"]
   }
 
