@@ -14,6 +14,7 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
       "ec2:DescribeInstanceTypes",
       "ec2:DescribeImages",
       "ec2:DescribeVpcs",
+      "ec2:DescribeVpcAttribute",
       "ec2:DescribeSubnets",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeAvailabilityZones"
