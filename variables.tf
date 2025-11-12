@@ -31,3 +31,26 @@ variable "tags" {
   }
 }
 
+variable "github_org" {
+  description = "GitHub organization or user that owns the repo"
+  type        = string
+}
+
+variable "github_repo" {
+  description = "Repository name that will run GitHub Actions"
+  type        = string
+}
+
+variable "allow_branches" {
+  description = "Which refs are allowed to assume the role (e.g., main only)"
+  type        = list(string)
+  default     = ["refs/heads/main"]
+}
+
+# GitHub OIDC thumbprints
+variable "github_oidc_thumbprints" {
+  description = "SHA-1 thumbprints for token.actions.githubusercontent.com"
+  type        = list(string)
+  default     = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+}
+
