@@ -22,6 +22,13 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     resources = ["*"]
   }
 
+  statement {
+    sid     = "CreateSecurityGroups"
+    effect  = "Allow"
+    actions = ["ec2:CreateSecurityGroup"]
+    resources = ["*"]
+  }
+
   # Launch only micro instances
   statement {
     sid     = "RunOnlyMicroInstances"
