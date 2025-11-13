@@ -12,10 +12,14 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     actions = [
       "ec2:DescribeAvailabilityZones",
       "ec2:DescribeImages",
+      "ec2:DescribeInstanceAttribute",
+      "ec2:DescribeInstanceCreditSpecifications",
       "ec2:DescribeInstances",
       "ec2:DescribeInstanceTypes",
       "ec2:DescribeSecurityGroups",
       "ec2:DescribeSubnets",
+      "ec2:DescribeTags",
+      "ec2:DescribeVolumes",
       "ec2:DescribeVpcs",
       "ec2:DescribeVpcAttribute",
     ]
@@ -37,18 +41,12 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     resources = ["*"]
   }
 
-  # Launch only micro instances
+  # Launch instances
   statement {
-    sid       = "RunOnlyMicroInstances"
+    sid       = "RunInstances"
     effect    = "Allow"
     actions   = ["ec2:RunInstances"]
     resources = ["*"]
-
-    condition {
-      test     = "ForAnyValue:StringEquals"
-      variable = "ec2:InstanceType"
-      values   = ["t3.micro"]
-    }
   }
 
   statement {
