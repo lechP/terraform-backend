@@ -52,14 +52,14 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
   }
 
   statement {
-    sid    = "ENIManagementForRunInstances",
-    effect = "Allow",
+    sid    = "ENIManagementForRunInstances"
+    effect = "Allow"
     actions = [
       "ec2:CreateNetworkInterface",
       "ec2:AttachNetworkInterface",
       "ec2:DeleteNetworkInterface",
       "ec2:DescribeNetworkInterfaces",
-    ],
+    ]
     resources = ["*"]
   }
 
