@@ -7,17 +7,17 @@
 # - Allows Describe* reads needed by Terraform.
 data "aws_iam_policy_document" "tf_ec2_limited" {
   statement {
-    sid     = "DescribeBasics"
-    effect  = "Allow"
+    sid    = "DescribeBasics"
+    effect = "Allow"
     actions = [
+      "ec2:DescribeAvailabilityZones",
+      "ec2:DescribeImages",
       "ec2:DescribeInstances",
       "ec2:DescribeInstanceTypes",
-      "ec2:DescribeImages",
+      "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSubnets",
       "ec2:DescribeVpcs",
       "ec2:DescribeVpcAttribute",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeAvailabilityZones"
     ]
     resources = ["*"]
   }
@@ -31,16 +31,17 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
       "ec2:AuthorizeSecurityGroupEgress",
       "ec2:RevokeSecurityGroupIngress",
       "ec2:RevokeSecurityGroupEgress",
-      "ec2:DescribeSecurityGroups"
+      "ec2:DescribeSecurityGroups",
+      "ec2:DeleteSecurityGroup",
     ]
     resources = ["*"]
   }
 
   # Launch only micro instances
   statement {
-    sid     = "RunOnlyMicroInstances"
-    effect  = "Allow"
-    actions = ["ec2:RunInstances"]
+    sid       = "RunOnlyMicroInstances"
+    effect    = "Allow"
+    actions   = ["ec2:RunInstances"]
     resources = ["*"]
 
     condition {
@@ -50,10 +51,22 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     }
   }
 
+  statement {
+    sid    = "ENIManagementForRunInstances",
+    effect = "Allow",
+    actions = [
+      "ec2:CreateNetworkInterface",
+      "ec2:AttachNetworkInterface",
+      "ec2:DeleteNetworkInterface",
+      "ec2:DescribeNetworkInterfaces",
+    ],
+    resources = ["*"]
+  }
+
   # Allow termination and stop/start
   statement {
-    sid     = "Lifecycle"
-    effect  = "Allow"
+    sid    = "Lifecycle"
+    effect = "Allow"
     actions = [
       "ec2:TerminateInstances",
       "ec2:StartInstances",
@@ -64,9 +77,9 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
 
   # Allow tagging created instances (Terraform commonly tags)
   statement {
-    sid     = "TagInstances"
-    effect  = "Allow"
-    actions = ["ec2:CreateTags", "ec2:DeleteTags"]
+    sid       = "TagInstances"
+    effect    = "Allow"
+    actions   = ["ec2:CreateTags", "ec2:DeleteTags"]
     resources = ["*"]
   }
 }
