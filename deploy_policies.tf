@@ -67,6 +67,7 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     effect = "Allow"
     actions = [
       "ec2:TerminateInstances",
+      "ec2:ModifyInstanceAttribute",
       "ec2:StartInstances",
       "ec2:StopInstances"
     ]
@@ -78,6 +79,19 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
     sid       = "TagInstances"
     effect    = "Allow"
     actions   = ["ec2:CreateTags", "ec2:DeleteTags"]
+    resources = ["*"]
+  }
+
+  # Allow EBS volume management
+  statement {
+    sid    = "EBSManagement"
+    effect = "Allow"
+    actions = [
+      "ec2:CreateVolume",
+      "ec2:AttachVolume",
+      "ec2:DetachVolume",
+      "ec2:DeleteVolume"
+    ]
     resources = ["*"]
   }
 }
