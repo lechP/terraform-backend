@@ -51,6 +51,7 @@ data "aws_iam_policy_document" "tf_ec2_policy" {
       "ec2:AttachNetworkInterface",
       "ec2:DeleteNetworkInterface",
       "ec2:DescribeNetworkInterfaces",
+      "ec2:DescribeNetworkInterfaceAttribute",
     ]
     resources = ["*"]
   }
@@ -112,9 +113,10 @@ data "aws_iam_policy_document" "tf_efs_policy" {
     effect = "Allow"
     actions = [
       "elasticfilesystem:DescribeFileSystems",
+      "elasticfilesystem:DescribeLifecycleConfiguration",
       "elasticfilesystem:DescribeMountTargets",
       "elasticfilesystem:DescribeTags",
-      "elasticfilesystem:DescribeMountTargetSecurityGroups"
+      "elasticfilesystem:DescribeMountTargetSecurityGroups",
     ]
     resources = ["*"]
   }
@@ -134,6 +136,7 @@ data "aws_iam_policy_document" "tf_efs_policy" {
     effect = "Allow"
     actions = [
       "elasticfilesystem:CreateTags",
+      "elasticfilesystem:TagResource",
       "elasticfilesystem:DeleteTags",
       "elasticfilesystem:ListTagsForResource"
     ]
