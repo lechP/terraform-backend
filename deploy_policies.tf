@@ -1,11 +1,5 @@
 
-# Initial EC2 policy: only launch/terminate micro instances + basic describes
-# Notes:
-# - Restricts RunInstances to t3.micro via condition.
-# - Allows tagging at launch (CreateTags on the instance).
-# - Allows TerminateInstances for instances it can see.
-# - Allows Describe* reads needed by Terraform.
-data "aws_iam_policy_document" "tf_ec2_limited" {
+data "aws_iam_policy_document" "tf_ec2_policy" {
   statement {
     sid    = "DescribeBasics"
     effect = "Allow"
@@ -97,7 +91,59 @@ data "aws_iam_policy_document" "tf_ec2_limited" {
 }
 
 resource "aws_iam_policy" "tf_ec2_limited" {
-  name        = "TerraformEC2MicroOnly"
-  description = "Allow Terraform to launch only micro EC2 instances and manage their lifecycle"
-  policy      = data.aws_iam_policy_document.tf_ec2_limited.json
+  name        = "TerraformEC2"
+  description = "Allow Terraform to launch EC2 instances and manage their lifecycle"
+  policy      = data.aws_iam_policy_document.tf_ec2_policy.json
+}
+
+data "aws_iam_policy_document" "tf_efs_policy" {
+  statement {
+    sid    = "CreateAndDeleteEFS"
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:CreateFileSystem",
+      "elasticfilesystem:DeleteFileSystem"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "DescribeEFS"
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:DescribeFileSystems",
+      "elasticfilesystem:DescribeMountTargets",
+      "elasticfilesystem:DescribeTags",
+      "elasticfilesystem:DescribeMountTargetSecurityGroups"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "ManageMountTargets"
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:CreateMountTarget",
+      "elasticfilesystem:DeleteMountTarget"
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "TagEFSResources"
+    effect = "Allow"
+    actions = [
+      "elasticfilesystem:CreateTags",
+      "elasticfilesystem:DeleteTags",
+      "elasticfilesystem:ListTagsForResource"
+    ]
+    resources = ["*"]
+  }
+
+}
+
+resource "aws_iam_policy" "tf_efs" {
+  name        = "TerraformEFS"
+  description = "Allow Terraform manage EFS resources"
+  policy      = data.aws_iam_policy_document.tf_efs_policy.json
 }
