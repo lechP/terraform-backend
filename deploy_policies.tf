@@ -150,3 +150,32 @@ resource "aws_iam_policy" "tf_efs" {
   description = "Allow Terraform manage EFS resources"
   policy      = data.aws_iam_policy_document.tf_efs_policy.json
 }
+
+data "aws_iam_policy_document" "tf_alb_policy" {
+    statement {
+        sid    = "ManageALB"
+        effect = "Allow"
+        actions = [
+        "elasticloadbalancing:CreateLoadBalancer",
+        "elasticloadbalancing:DeleteLoadBalancer",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:CreateTargetGroup",
+        "elasticloadbalancing:DeleteTargetGroup",
+        "elasticloadbalancing:DescribeTargetGroups",
+        "elasticloadbalancing:RegisterTargets",
+        "elasticloadbalancing:DeregisterTargets",
+        "elasticloadbalancing:CreateListener",
+        "elasticloadbalancing:DeleteListener",
+        "elasticloadbalancing:DescribeListeners",
+        "elasticloadbalancing:AddTags",
+        "elasticloadbalancing:RemoveTags"
+        ]
+        resources = ["*"]
+    }
+}
+
+resource "aws_iam_policy" "tf_alb" {
+    name        = "TerraformALB"
+    description = "Allow Terraform to manage Application Load Balancers"
+    policy      = data.aws_iam_policy_document.tf_alb_policy.json
+}

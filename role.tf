@@ -22,3 +22,8 @@ resource "aws_iam_role_policy_attachment" "attach_efs" {
   role       = aws_iam_role.terraform_ci.name
   policy_arn = aws_iam_policy.tf_efs.arn
 }
+
+resource "aws_iam_role_policy_attachment" "attach_alb" {
+  role       = aws_iam_role.terraform_ci.name
+  policy_arn = aws_iam_policy.tf_alb.arn
+}
