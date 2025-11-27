@@ -152,30 +152,62 @@ resource "aws_iam_policy" "tf_efs" {
 }
 
 data "aws_iam_policy_document" "tf_alb_policy" {
-    statement {
-        sid    = "ManageALB"
-        effect = "Allow"
-        actions = [
-        "elasticloadbalancing:CreateLoadBalancer",
-        "elasticloadbalancing:DeleteLoadBalancer",
-        "elasticloadbalancing:DescribeLoadBalancers",
-        "elasticloadbalancing:CreateTargetGroup",
-        "elasticloadbalancing:DeleteTargetGroup",
-        "elasticloadbalancing:DescribeTargetGroups",
-        "elasticloadbalancing:RegisterTargets",
-        "elasticloadbalancing:DeregisterTargets",
-        "elasticloadbalancing:CreateListener",
-        "elasticloadbalancing:DeleteListener",
-        "elasticloadbalancing:DescribeListeners",
-        "elasticloadbalancing:AddTags",
-        "elasticloadbalancing:RemoveTags"
-        ]
-        resources = ["*"]
-    }
+  statement {
+    sid    = "ManageALB"
+    effect = "Allow"
+    actions = [
+      "elasticloadbalancing:CreateLoadBalancer",
+      "elasticloadbalancing:DescribeLoadBalancerAttributes",
+      "elasticloadbalancing:ModifyLoadBalancerAttributes",
+      "elasticloadbalancing:DeleteLoadBalancer",
+      "elasticloadbalancing:DescribeLoadBalancers",
+      "elasticloadbalancing:CreateTargetGroup",
+      "elasticloadbalancing:ModifyTargetGroup",
+      "elasticloadbalancing:ModifyTargetGroupAttributes",
+      "elasticloadbalancing:DeleteTargetGroup",
+      "elasticloadbalancing:DescribeTargetGroups",
+      "elasticloadbalancing:DescribeTargetGroupAttributes",
+      "elasticloadbalancing:RegisterTargets",
+      "elasticloadbalancing:DescribeTargetHealth",
+      "elasticloadbalancing:DeregisterTargets",
+      "elasticloadbalancing:CreateListener",
+      "elasticloadbalancing:DescribeListeners",
+      "elasticloadbalancing:DescribeListenerAttributes",
+      "elasticloadbalancing:DeleteListener",
+      "elasticloadbalancing:AddTags",
+      "elasticloadbalancing:DescribeTags",
+      "elasticloadbalancing:RemoveTags",
+      "elasticloadbalancing:CreateRule",
+      "elasticloadbalancing:DescribeRules",
+      "elasticloadbalancing:ModifyRule",
+      "elasticloadbalancing:DeleteRule",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "DescribeEC2Basics"
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeInternetGateways",
+      "ec2:DescribeAccountAttributes",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid    = "IAMCreateServiceLinkedRole"
+    effect = "Allow"
+    actions = [
+      "iam:CreateServiceLinkedRole",
+    ]
+    resources = ["*"]
+  }
+
 }
 
 resource "aws_iam_policy" "tf_alb" {
-    name        = "TerraformALB"
-    description = "Allow Terraform to manage Application Load Balancers"
-    policy      = data.aws_iam_policy_document.tf_alb_policy.json
+  name        = "TerraformALB"
+  description = "Allow Terraform to manage Application Load Balancers"
+  policy      = data.aws_iam_policy_document.tf_alb_policy.json
 }
